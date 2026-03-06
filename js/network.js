@@ -37,27 +37,27 @@ export function renderNetworkSummary(data, algoKey) {
             <div class="grid grid-cols-2 gap-x-4 gap-y-2 text-xs">
                 <div class="flex justify-between border-b border-slate-700/30 pb-1">
                     <span class="text-slate-400 hover:text-white hover:cursor-pointer" title = "網紅總數">母體數</span>
-                    <span class="text-slate-200 font-mono">${Math.floor(data["母體數"])}</span>
+                    <span class="text-slate-200 font-mono">${Math.floor(data["metadata"]["total_influencers"])}</span>
                 </div>
                 <div class="flex justify-between border-b border-slate-700/30 pb-1">
                     <span class="text-slate-400 hover:text-white hover:cursor-pointer" title = "無被追蹤也未追蹤他人">0-Degree</span>
-                    <span class="text-slate-200 font-mono">${Math.floor(data["0-Degree"])}</span>
+                    <span class="text-slate-200 font-mono">${Math.floor(data["metadata"]["isolated_nodes"])}</span>
                 </div>
                 <div class="flex justify-between border-b border-slate-700/30 pb-1">
                     <span class="text-slate-400">密度(Density)</span>
-                    <span class="text-slate-200 font-mono">${toPercent2(data["密度(Density)"])}</span>
+                    <span class="text-slate-200 font-mono">${toPercent2(data["global_metrics"]["density"])}</span>
                 </div>
                 <div class="flex justify-between border-b border-slate-700/30 pb-1">
                     <span class="text-slate-400">互惠率(Reciprocity)</span>
-                    <span class="text-slate-200 font-mono">${toPercent2(data["互惠率(Reciprocity)"])}</span>
+                    <span class="text-slate-200 font-mono">${toPercent2(data["global_metrics"]["reciprocity"])}</span>
                 </div>
                 <div class="flex justify-between border-b border-slate-700/30 pb-1">
                     <span class="text-slate-400">傳遞性(Transitivity)</span>
-                    <span class="text-slate-200 font-mono">${toPercent2(data["傳遞性(Transitivity)"])}</span>
+                    <span class="text-slate-200 font-mono">${toPercent2(data["global_metrics"]["transitivity"])}</span>
                 </div>
                 <div class="flex justify-between border-b border-slate-700/30 pb-1">
                     <span class="text-slate-400">團體凝聚力(Avg Clustering)</span>
-                    <span class="text-slate-200 font-mono">${toPercent2(data["團體凝聚力(Avg Clustering)"])}</span>
+                    <span class="text-slate-200 font-mono">${toPercent2(data["global_metrics"]["average_clustering"])}</span>
                 </div>
             </div>
         </div>
@@ -128,11 +128,13 @@ export function initNetwork(gData) {
             <div style="color: #a2abb8; font-size: 12px;">
                 派系：${node.group}<br/>
                 <hr style="border-color: #334155; margin: 4px 0;"/>
-                被追蹤數：<span style="color: #f8fafc">${node.metrics.in_degree}</span><br/>
-                追蹤他人：<span style="color: #f8fafc">${node.metrics.out_degree}</span><br/>
-                雙向互粉：<span style="color: #f8fafc">${node.metrics.mutual}</span><br/>
-                總追蹤他人：<span style="color: #f8fafc">${node.metrics.distinct_following.toLocaleString()}</span><br/>
+                被標記次數：<span style="color: #f8fafc">${node.metrics.in_degree}</span><br/>
+                標記他人次數：<span style="color: #f8fafc">${node.metrics.out_degree}</span><br/>
+                雙向互標記人次：<span style="color: #f8fafc">${node.metrics.mutual}</span><br/>
                 中介度：<span style="color: #f8fafc">${(node.between_centrality * 100).toFixed(2) + "%"}</span><br/>
+                總粉絲數：<span style="color: #f8fafc">${node.metrics.Followers.toLocaleString()}</span><br/>
+                總追蹤他人：<span style="color: #f8fafc">${node.metrics.Following.toLocaleString()}</span><br/>
+                總貼文數：<span style="color: #f8fafc">${node.metrics.posts.toLocaleString()}</span><br/>
                 類別：<span style="color: #f8fafc">${node.category}</span><br/>
         `,
         )
