@@ -111,33 +111,55 @@ window.handleSearch = () => handleSearch(gData);
 
 window.switchAlgorithm = switchAlgorithm;
 
+// [關鍵修復] 將資料透過 getter 掛載到全域，解決 statistic.js 找不到函式的問題
+window.getCommunityData = () => communityData;
+
 window.switchTab = (tab) => {
+    // 處理分頁顯示/隱藏
     document
         .getElementById("tab-network")
         .classList.toggle("hidden", tab !== "network");
     document
         .getElementById("tab-matrix")
         .classList.toggle("hidden", tab !== "data-report");
+    // [新增] 處理分群比較分頁
+    const clusterTab = document.getElementById("tab-cluster");
+    if (clusterTab) clusterTab.classList.toggle("hidden", tab !== "cluster");
+
+    // 更新按鈕樣式
     document
         .getElementById("btn-network")
         .classList.toggle("tab-active", tab === "network");
     document
         .getElementById("btn-data-report")
-        .classList.toggle("tab-active", tab === "heatmap");
+        .classList.toggle("tab-active", tab === "heatmap"); // 保持您原有的 ID 命名
+    document
+        .getElementById("btn-cluster")
+        ?.classList.toggle("tab-active", tab === "cluster");
 
     const isNetwork = tab === "network";
+    const isCluster = tab === "cluster";
+
+    // 控制工具列顯示
     document
         .getElementById("btn-legend-open")
         .classList.toggle("hidden", !isNetwork);
     document
-        .getElementById("switch-algorithm")
+        .getElementById("search-section")
         .classList.toggle("hidden", !isNetwork);
     document
         .getElementById("legend-panel")
         .classList.toggle("hidden", !isNetwork);
+
+    // [關鍵] 演算法切換在網路、報表、分群比較時都要顯示
     document
-        .getElementById("search-section")
-        .classList.toggle("hidden", !isNetwork);
+        .getElementById("switch-algorithm")
+        .classList.toggle("hidden", tab === "none");
+
+    // 如果切換到分群比較，立即渲染一次
+    if (isCluster) {
+        renderClusterComparisonView();
+    }
 };
 
 window.focusNodeByName = (name) => {
