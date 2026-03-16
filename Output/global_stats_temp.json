@@ -1,14 +1,12 @@
 {
-  "modularity_scores": {
-    "Walktrap": 0.603,
-    "Louvain": 0.6588,
-    "Greedy": 0.6588
-  },
-  "total_nodes": 200,
-  "active_nodes": 89,
-  "isolated_nodes": 111,
-  "density": 0.003442,
-  "reciprocity": 0.277372,
-  "transitivity": 0.15,
-  "avg_clustering": 0.063372
+    "母體數": 200,
+    "0-Degree": 111,
+    "全網總標記次數(Total Tags)": 459,
+    "密度(Density)": 0.0034422110552763817,
+    "密度去0(Density_0)": 0.017492339121552604,
+    "互惠率(Reciprocity)": 0.2773722627737226,
+    "傳遞性(Transitivity)": 0.15,
+    "團體凝聚力(Avg Clustering)": 0.002133189028124716,
+    "同質性係數(Assortativity)": 0.26582047281697785,
+    "核心邊陲結構適配度(Core-periphery Structure Fit)": 0.13203463203463203
 }

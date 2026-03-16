@@ -20,10 +20,10 @@
     </head>
     <body class="flex flex-col">
         <header
-            class="z-50 py-2 md:px-4 md:py-2 lg:px-5 lg:py-3 bg-slate-900 border-b border-slate-800 flex justify-between items-center"
+            class="relative z-50 py-2 md:px-4 md:py-2 lg:px-5 lg:py-3 bg-slate-900 border-b border-slate-800 flex justify-between items-center"
         >
             <div class="flex items-center space-x-6">
-                <div class="flex flex-row gap-4 justify-center items-center">
+                <div class="d-flex flex-row gap-4 justify-center items-center">
                     <div>
                         <h1
                             class="text-md font-bold text-blue-400 mobile-disable"
@@ -48,7 +48,7 @@
                         class="tab-active py-2 px-1 text-lg font-medium transition-all"
                     >
                         🌐
-                        <span class="mobile-disable text-sm">網路</span>
+                        <span class="mobile-disable text-sm">社交網路</span>
                     </button>
                     <button
                         onclick="switchTab('data-report')"
@@ -64,36 +64,9 @@
                         id="btn-cluster"
                         class="py-2 px-1 text-lg font-medium text-slate-400 transition-all"
                     >
-                        🍱 <span class="mobile-disable text-sm">分群屬性</span>
-                    </button>
-                    <button
-                        onclick="switchTab('sna')"
-                        id="btn-sna"
-                        class="py-2 px-1 text-lg font-medium text-slate-400 transition-all"
-                    >
-                        📈 <span class="mobile-disable text-sm">分群SNA</span>
+                        🍱 <span class="mobile-disable text-sm">分群比較</span>
                     </button>
                 </nav>
-
-                <div
-                    id="switch-algorithm"
-                    class="flex items-center gap-2 bg-slate-700/50 px-1 py-1 rounded-lg border border-slate-600"
-                >
-                    <label
-                        for="algo-selector"
-                        class="text-xs text-slate-400 px-1"
-                        >演算法:</label
-                    >
-                    <select
-                        id="algo-selector"
-                        onchange="switchAlgorithm(this.value)"
-                        class="pr-6 bg-transparent text-sm text-blue-300 outline-none cursor-pointer"
-                    >
-                        <option value="louvain">Louvain</option>
-                        <option value="greedy">Greedy Modularity</option>
-                        <option value="walktrap">WalkTrap</option>
-                    </select>
-                </div>
             </div>
 
             <div
@@ -119,11 +92,29 @@
             </div>
         </header>
 
-        <main class="flex-grow relative px-4 py-1">
+        <main class="flex-grow relative p-4">
+            <div
+                id="switch-algorithm"
+                class="absolute z-50 top-4 right-4 flex items-center gap-2 bg-slate-700/50 px-3 py-1 rounded-lg border border-slate-600"
+            >
+                <label for="algo-selector" class="text-xs text-slate-400"
+                    >演算法:</label
+                >
+                <select
+                    id="algo-selector"
+                    onchange="switchAlgorithm(this.value)"
+                    class="pr-6 bg-transparent text-sm text-blue-300 outline-none cursor-pointer"
+                >
+                    <option value="louvain">Louvain</option>
+                    <option value="greedy">Greedy Modularity</option>
+                    <option value="walktrap">WalkTrap</option>
+                </select>
+            </div>
+
             <button
                 id="btn-legend-open"
                 onclick="toggleLegend()"
-                class="absolute top-2 left-4 z-50 bg-slate-700/90 hover:bg-blue-600 text-white p-2 p-md-3 shadow-lg transition-all border border-slate-600"
+                class="absolute top-4 left-4 z-50 bg-slate-700/90 hover:bg-blue-600 text-white p-2 p-md-3 shadow-lg transition-all border border-slate-600"
                 title="顯示分群圖例"
             >
                 📊 <span class="text-xs ml-1 mobile-disable">圖例</span>
@@ -164,14 +155,14 @@
                     class="w-full h-full bg-slate-800 rounded-xl overflow-hidden shadow-2xl"
                 ></div>
                 <div
-                    class="absolute bottom-8 right-8 flex flex-row gap-2 lg:flex-row space-y-2"
+                    class="absolute bottom-8 right-8 flex flex-row gap-2 lg:flex-col space-y-2"
                 >
                     <button
                         onclick="unlockNodes()"
-                        class="bg-red-500/80 hover:bg-red-600 p-1 rounded-lg text-xs backdrop-blur-md text-white"
+                        class="bg-red-500/80 hover:bg-red-600 p-2 rounded-lg text-xs backdrop-blur-md text-white"
                     >
                         🔓
-                        <span class="mobile-disable">取消選取</span>
+                        <span class="mobile-disable">解除選擇</span>
                     </button>
                     <button
                         onclick="resetView()"
@@ -203,15 +194,15 @@
 
             <div
                 id="tab-cluster"
-                class="hidden w-full overflow-x-auto bg-slate-900/20"
+                class="hidden w-full overflow-x-auto overflow-y-hidden bg-slate-900/40"
                 style="height: calc(100vh - 80px)"
-            ></div>
-
-            <div
-                id="tab-sna"
-                class="hidden w-full overflow-y-auto bg-slate-900/20 px-4 pb-20"
-                style="height: calc(100vh - 80px)"
-            ></div>
+            >
+                <div class="flex items-center justify-center h-full">
+                    <p class="text-slate-500 animate-pulse">
+                        正在準備分群比較統計資料...
+                    </p>
+                </div>
+            </div>
         </main>
 
         <!-- <script src="__main.js"></script> -->

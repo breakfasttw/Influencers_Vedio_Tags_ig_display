@@ -12,9 +12,6 @@ import {
     renderMetricsTable,
 } from "./report.js";
 
-import { renderClusterComparisonView } from "./statistic.js";
-import { renderSnaComparisonView } from "./statistic_sna.js";
-
 // ==========================================
 // 全域狀態 (State)
 // ==========================================
@@ -62,7 +59,7 @@ async function switchAlgorithm(algoKey) {
                     `./Output/Louvain/nodes_edges_lv.json?v=${timestamp}`,
                 ).then((r) => r.json()),
                 fetch(
-                    `./Output/Walktrap/nodes_edges_wt.json?v=${timestamp}`,
+                    `./Output/WalkTrap/nodes_edges_wt.json?v=${timestamp}`,
                 ).then((r) => (r.ok ? r.json() : { nodes: [] })),
                 fetch(
                     `${config.path}community_grouping_report_final${config.suffix}.csv?v=${timestamp}`,
@@ -100,24 +97,8 @@ async function switchAlgorithm(algoKey) {
 
         // 【關鍵：補上這行】渲染左側分群圖例
         renderLegend(communityData, gData);
-        // [新增] 如果目前在分群比較頁面，切換演算法也要同步更新圖表
-        if (
-            !document.getElementById("tab-cluster").classList.contains("hidden")
-        ) {
-            renderClusterComparisonView();
-        }
-        // 在 switchAlgorithm 的 try 區塊最後面 (原本 renderClusterComparisonView() 的下方) 加入：
-        if (!document.getElementById("tab-sna").classList.contains("hidden")) {
-            renderSnaComparisonView(algoKey);
-        }
     } catch (error) {
         console.error("載入失敗:", error);
-        // [新增] 如果目前在分群比較頁面，切換演算法也要同步更新圖表
-        if (
-            !document.getElementById("tab-cluster").classList.contains("hidden")
-        ) {
-            renderClusterComparisonView();
-        }
     }
 }
 
@@ -133,56 +114,51 @@ window.switchAlgorithm = switchAlgorithm;
 // [關鍵修復] 將資料透過 getter 掛載到全域，解決 statistic.js 找不到函式的問題
 window.getCommunityData = () => communityData;
 
-// 修改 switchTab 函式
 window.switchTab = (tab) => {
-    const isNetwork = tab === "network";
-    const isReport = tab === "data-report";
-    const isCluster = tab === "cluster";
-    const isSna = tab === "sna"; // 新增判斷
-
-    // 切換分頁顯示
+    // 處理分頁顯示/隱藏
     document
         .getElementById("tab-network")
-        .classList.toggle("hidden", !isNetwork);
-    document.getElementById("tab-matrix").classList.toggle("hidden", !isReport);
+        .classList.toggle("hidden", tab !== "network");
     document
-        .getElementById("tab-cluster")
-        .classList.toggle("hidden", !isCluster);
-    document.getElementById("tab-sna").classList.toggle("hidden", !isSna); // 綁定新容器
+        .getElementById("tab-matrix")
+        .classList.toggle("hidden", tab !== "data-report");
+    // [新增] 處理分群比較分頁
+    const clusterTab = document.getElementById("tab-cluster");
+    if (clusterTab) clusterTab.classList.toggle("hidden", tab !== "cluster");
 
-    // 切換按鈕樣式
+    // 更新按鈕樣式
     document
         .getElementById("btn-network")
-        .classList.toggle("tab-active", isNetwork);
+        .classList.toggle("tab-active", tab === "network");
     document
         .getElementById("btn-data-report")
-        .classList.toggle("tab-active", isReport);
+        .classList.toggle("tab-active", tab === "heatmap"); // 保持您原有的 ID 命名
     document
         .getElementById("btn-cluster")
-        ?.classList.toggle("tab-active", isCluster);
-    document.getElementById("btn-sna")?.classList.toggle("tab-active", isSna); // 綁定新按鈕
+        ?.classList.toggle("tab-active", tab === "cluster");
 
-    // 控制工具列與搜尋框
+    const isNetwork = tab === "network";
+    const isCluster = tab === "cluster";
+
+    // 控制工具列顯示
     document
         .getElementById("btn-legend-open")
         .classList.toggle("hidden", !isNetwork);
     document
-        .getElementById("legend-panel")
-        .classList.toggle("hidden", !isNetwork);
-    document
         .getElementById("search-section")
         .classList.toggle("hidden", !isNetwork);
+    document
+        .getElementById("legend-panel")
+        .classList.toggle("hidden", !isNetwork);
 
-    // 演算法選擇器在網路、分群比較和 SNA 比較時都要顯示
+    // [關鍵] 演算法切換在網路、報表、分群比較時都要顯示
     document
         .getElementById("switch-algorithm")
-        .classList.toggle("hidden", isReport);
+        .classList.toggle("hidden", tab === "none");
 
-    // 執行渲染
-    if (isCluster) renderClusterComparisonView();
-    if (isSna) {
-        const algoKey = document.getElementById("algo-selector").value;
-        renderSnaComparisonView(algoKey);
+    // 如果切換到分群比較，立即渲染一次
+    if (isCluster) {
+        renderClusterComparisonView();
     }
 };
 

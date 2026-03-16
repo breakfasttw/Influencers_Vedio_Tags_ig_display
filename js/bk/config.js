@@ -4,7 +4,7 @@
 export const ALGO_CONFIG = {
     greedy: { name: "Greedy", path: "./Output/", suffix: "_gd" },
     louvain: { name: "Louvain", path: "./Output/Louvain/", suffix: "_lv" },
-    walktrap: { name: "Walktrap", path: "./Output/Walktrap/", suffix: "_wt" },
+    walktrap: { name: "WalkTrap", path: "./Output/WalkTrap/", suffix: "_wt" },
 };
 
 // ==========================================
@@ -18,9 +18,6 @@ export const COLUMN_NAMES = {
     "Mutual_Follow (互標數)": "互標數",
     Network_Influence_Score: "被標記率",
     Betweenness_Centrality: "中介度",
-    Eigenvector_Centrality: "中心性",
-    Local_Clustering_Coefficient: "聚集係數",
-    "Core-periphery_Coreness": "核心度",
     Followers: "粉絲",
     Following: "總追",
     posts: "貼文",
@@ -36,17 +33,11 @@ export const COLUMN_EXPLANATIONS = {
     Person_Name: "點擊可開啟該網紅的 Instagram 頁面",
     "In_Degree (被標記數)": "有多少圈內網紅標記他 (In-Degree)",
     "Out_Degree (主動標記數)": "他主動標記了多少圈內網紅 (Out-Degree)",
-    "Mutual_Follow (互標數)": "雙向互相標記的人數",
+    "Mutual_Follow (互標數)": "兩兩有互相標記過的人數",
     Network_Influence_Score:
         "計算公式：InD / (群體總數 - 1)，代表其在圈內的受關注程度",
     Betweenness_Centrality:
-        "Betweenness_Centrality，中介中心性：代表該節點在網絡中擔任『橋樑』的程度，nx.betweenness_centrality(G, normalized=True)",
-    Eigenvector_Centrality:
-        "Eigenvector_Centrality，特徵向量中心性，不只看連結數量，也看連結的對象是否大咖，反映「核心地位」",
-    Local_Clustering_Coefficient:
-        "Local_Clustering_Coefficient，一個節點的朋友之間是否互相連結，代表朋友圈密度",
-    "Core-periphery_Coreness":
-        "Core-periphery_Coreness，節點在核心—邊陲結構中的核心程度：單一節點有多靠近網路的最核心地帶",
+        "中介中心性：代表該節點在網絡中擔任『橋樑』的程度，nx.betweenness_centrality(G, normalized=True)",
     followers: "該網紅IG上的總粉絲數",
     followings: "該網紅IG上的總追蹤人數",
     posts: "該網紅IG上的總貼文數 (media_counts)",

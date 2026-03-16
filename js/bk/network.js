@@ -1,4 +1,5 @@
 // [新增] 引入數據與顏色配置
+
 import { renderClusterAnalysis } from "./statistic.js";
 
 // 導入共用變數與資料
@@ -47,10 +48,6 @@ export function renderNetworkSummary(data, algoKey) {
                     <span class="text-slate-200 font-mono">${toPercent2(data["global_metrics"]["density"])}</span>
                 </div>
                 <div class="flex justify-between border-b border-slate-700/30 pb-1">
-                    <span class="text-slate-400">密度(去孤島)</span>
-                    <span class="text-slate-200 font-mono">${toPercent2(data["global_metrics"]["density_0"])}</span>
-                </div>
-                <div class="flex justify-between border-b border-slate-700/30 pb-1">
                     <span class="text-slate-400">互惠率(Reciprocity)</span>
                     <span class="text-slate-200 font-mono">${toPercent2(data["global_metrics"]["reciprocity"])}</span>
                 </div>
@@ -61,10 +58,6 @@ export function renderNetworkSummary(data, algoKey) {
                 <div class="flex justify-between border-b border-slate-700/30 pb-1">
                     <span class="text-slate-400">團體凝聚力(Avg Clustering)</span>
                     <span class="text-slate-200 font-mono">${toPercent2(data["global_metrics"]["average_clustering"])}</span>
-                </div>
-                <div class="flex justify-between border-b border-slate-700/30 pb-1">
-                    <span class="text-slate-400">核心度(core periphery)</span>
-                    <span class="text-slate-200 font-mono">${toPercent2(data["global_metrics"]["core_periphery_structure_fit"])}</span>
                 </div>
             </div>
         </div>
@@ -117,7 +110,7 @@ export function initNetwork(gData) {
     graphInstance = ForceGraph()(elem)
         .graphData(gData)
         .nodeId("id")
-        .cooldownTicks(800) // 讓引擎只跑 100 次迭代就強制停止，避免跑太久
+        .cooldownTicks(500) // 讓引擎只跑 100 次迭代就強制停止，避免跑太久
         .onEngineStop(() => {
             // --- 關鍵：鎖定座標 ---
             // 當引擎停止時，把目前的座標固定住，這樣後續觸發 graphData 也不會再晃動
@@ -135,18 +128,14 @@ export function initNetwork(gData) {
             <div style="color: #a2abb8; font-size: 12px;">
                 派系：${node.group}<br/>
                 <hr style="border-color: #334155; margin: 4px 0;"/>
-                被追蹤數：<span style="color: #f8fafc">${node.metrics.in_degree}</span><br/>
-                追蹤他人：<span style="color: #f8fafc">${node.metrics.out_degree}</span><br/>
-                雙向互粉：<span style="color: #f8fafc">${node.metrics.mutual}</span><br/>
-                中介度：<span style="color: #f8fafc">${((node.metrics.between_centrality || 0) * 100).toFixed(2) + "%"}</span><br/>
-                中心性：<span style="color: #f8fafc">${((node.metrics["Eigenvector Centrality"] || 0) * 100).toFixed(3) + "%"}</span><br/>
-                聚集係數：<span style="color: #f8fafc">${(node.metrics["Local Clustering Coefficient"] || 0).toFixed(3)}</span><br/>
-                核心度：<span style="color: #f8fafc">${node.metrics["Core-periphery Coreness"] || 0}</span><br/>
-                總粉絲數：<span style="color: #f8fafc">${(node.Followers || 0).toLocaleString()}</span><br/>
-                總追蹤他人：<span style="color: #f8fafc">${(node.Following || 0).toLocaleString()}</span><br/>
-                總貼文數：<span style="color: #f8fafc">${(node.posts || 0).toLocaleString()}</span><br/>
+                被標記次數：<span style="color: #f8fafc">${node.metrics.in_degree}</span><br/>
+                標記他人次數：<span style="color: #f8fafc">${node.metrics.out_degree}</span><br/>
+                雙向互標記人次：<span style="color: #f8fafc">${node.metrics.mutual}</span><br/>
+                中介度：<span style="color: #f8fafc">${(node.between_centrality * 100).toFixed(2) + "%"}</span><br/>
+                總粉絲數：<span style="color: #f8fafc">${node.metrics.Followers.toLocaleString()}</span><br/>
+                總追蹤他人：<span style="color: #f8fafc">${node.metrics.Following.toLocaleString()}</span><br/>
+                總貼文數：<span style="color: #f8fafc">${node.metrics.posts.toLocaleString()}</span><br/>
                 類別：<span style="color: #f8fafc">${node.category}</span><br/>
-            </div>
         `,
         )
         //.nodeLabel((node) => `${node.name} (Group: ${node.group})`)
@@ -362,7 +351,7 @@ export function renderLegend(communityData, gData) {
                                 <div id="top5-${index}" class="w-full bg-slate-800/50 rounded p-2"></div>
                             </div>
                         </div>
-
+                        
                         <div class="p-4 leading-relaxed">
                             <div class="text-slate-400 mb-1">成員名單：</div>
                             ${sortedMembers}
